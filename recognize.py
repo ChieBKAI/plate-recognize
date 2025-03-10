@@ -168,7 +168,7 @@ def parse_opt():
 
 if __name__ == '__main__':
     opt = parse_opt()
-    char_model = Detection(size=[128, 128],weights_path='char.pt',device=opt.device,iou_thres=opt.iou_thres,conf_thres=opt.conf_thres)
+    char_model = Detection(size=[128, 128],weights_path='weight.pt',device=opt.device,iou_thres=opt.iou_thres,conf_thres=opt.conf_thres)
     path=opt.source
 
     
