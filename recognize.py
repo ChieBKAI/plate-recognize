@@ -90,7 +90,10 @@ class Detection:
             return img
     def load_model(self,path, train = False):
         # print(self.device)
-        model = attempt_load(path, map_location=self.device)  # load FP32 model
+        # model = attempt_load(path, map_location=self.device)  # load FP32 model
+        model = torch.load(path, map_location=self.device)['model']
+        model = model.float()
+        model.to(self.device).eval()
         names = model.module.names if hasattr(model, 'module') else model.names  # get class names
         if train:
             model.train()
