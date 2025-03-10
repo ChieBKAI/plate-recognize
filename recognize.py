@@ -172,13 +172,16 @@ if __name__ == '__main__':
     path=opt.source
 
     
-
+    count = 0
+    times = 0
     for file in os.listdir(path):
         if file.endswith('.jpg') or file.endswith('.png'):
+            count += 1
             img = cv2.imread(os.path.join(path, file))
             time_start = time.time()
             results,_ = char_model.detect(img.copy())
             time_end = time.time()
+            times += time_end - time_start
             if img.shape[0] > (img.shape[1]/2):
                 plate_text = sort_license_plate_chars(results, 'square')
             else:
@@ -193,49 +196,5 @@ if __name__ == '__main__':
             
             print("Time to process image {}: {:.4f} seconds".format(file, time_end - time_start))
             
-            
-
-    # while True:
-    #     if not paused:
-    #         ret, img = cap.read()
-    #         if not ret:
-    #             break  # Exit loop if no frame is captured
-            
-    #         if frame_count % frame_interval == 0:
-    #             # Run object detection
-    #             time_detect_start = time.time()
-    #             results, resized_img = obj_model.detect(img.copy())
-    #             time_detect_end = time.time()
-    #             print("Time to detect objects: {:.4f} seconds".format(time_detect_end - time_detect_start))
-    #             for name, conf, box in results:
-    #                 # Crop plate
-    #                 if 'plate' in name:
-    #                     time_plate_start = time.time()
-    #                     crop_img = resized_img[int(box[1]):int(box[3]), int(box[0]):int(box[2])]
-    #                     detections, _ = char_model.detect(crop_img)
-
-    #                     plate_text = ""
-    #                     if 'rectangle' in name:
-    #                         plate_text = sort_license_plate_chars(detections, 'rectangle')
-    #                     else:
-    #                         plate_text = sort_license_plate_chars(detections, 'square')
-
-    #                     plate_text = plate_text.upper()
-    #                     resized_img = cv2.putText(resized_img, "{}".format(plate_text), (int(box[0]), int(box[1])-3),
-    #                                             cv2.FONT_HERSHEY_SIMPLEX, 0.7,
-    #                                             (255, 0, 255), 2)
-    #                     resized_img = cv2.rectangle(resized_img, (int(box[0]),int(box[1])), (int(box[2]),int(box[3])), (0,0,255), 1)
-    #                     time_plate_end = time.time()
-    #                     print("Time to detect plate: {:.4f} seconds".format(time_plate_end - time_plate_start))
-
-    #             # Display the processed frame in a window
-    #             cv2.imshow('Real-Time License Plate Detection', resized_img)
-    #         frame_count += 1
-
-    #     # Exit on 'q' key press
-    #     key = cv2.waitKey(1) & 0xFF
-    #     if key == ord('q'):  # Quit on 'q'
-    #         break
-    #     elif key == ord('p'):  # Pause/resume on 'p'
-    #         paused = not paused
-
+    print("Average time to process 1 image: {:.4f} seconds".format(times / count))
+    print("Total images: ", count)
